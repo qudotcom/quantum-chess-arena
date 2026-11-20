@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -30,7 +32,7 @@ async def auth_middleware(request: Request, call_next):
     return response
 
 # --- 2. ADD SESSION MIDDLEWARE LAST ---
-app.add_middleware(SessionMiddleware, secret_key="SUPER_SECRET_QUANTUM_KEY_CHANGE_THIS")
+app.add_middleware(SessionMiddleware, secret_key=os.environ.get("SESSION_SECRET", "dev-only-insecure-key"))
 
 # --- 3. ROUTERS ---
 app.include_router(auth_router.router, prefix="/auth", tags=["auth"])
